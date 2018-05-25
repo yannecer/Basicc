@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="WheelItemTextSize">14sp</dimen>
+    <dimen name="WheelSelectedItemTextSize">20sp</dimen>
+    <dimen name="WheelItemSpace">12dp</dimen>
+    <dimen name="WheelIndicatorSize">2dp</dimen>
+    <dimen name="WheelMargins">8dp</dimen>
+    <dimen name="WheelItemHeightSpace">16dp</dimen>
+    <dimen name="WheelItemWidthSpace">32dp</dimen>
+
+
+    <dimen name="title_size">16dp</dimen>
+    <dimen name="button_size">14dp</dimen>
+    <dimen name="text_size">14sp</dimen>
+    <dimen name="marginLeft">24dp</dimen>
+    <dimen name="marginRight">24dp</dimen>
+    <dimen name="message_marginTop">10dp</dimen>
+    <dimen name="input_marginTop">20dp</dimen>
+    <dimen name="input_marginLeft">26dp</dimen>
+    <dimen name="input_marginRight">26dp</dimen>
+
+
+</resources>
