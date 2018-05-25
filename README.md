@@ -3,3 +3,6 @@
 
 
 Base封装，Retrofit，一些工具类
+
+
+compile 'com.necer.basic:basic:1.0.0'
