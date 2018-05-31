@@ -39,7 +39,6 @@ public abstract class RxObserver<T> implements Observer<T> {
         this.mBaseView = baseView;
         this.mWhichRequest = whichRequest;
 
-
         if (mBaseView instanceof Activity) {
             mContext = (Context) mBaseView;
         } else if (mBaseView instanceof Fragment) {
