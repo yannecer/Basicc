@@ -45,6 +45,7 @@ public abstract class RxObserver<T> implements Observer<T> {
             mContext = ((Fragment) mBaseView).getContext();
         }
 
+
     }
 
 
