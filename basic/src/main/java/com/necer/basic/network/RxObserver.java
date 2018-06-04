@@ -9,7 +9,9 @@ import android.widget.Toast;
 import com.google.gson.JsonParseException;
 import com.necer.basic.base.BaseView;
 import com.necer.basic.base.MyLog;
+import com.necer.basic.enentbus.Event401;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 
 import java.net.ConnectException;
@@ -92,6 +94,11 @@ public abstract class RxObserver<T> implements Observer<T> {
         } else if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
             switch (httpException.code()) {
+                case 401:
+                    //用户权限不够，重新登录
+                    EventBus.getDefault().post(new Event401());
+                    error = "请重新登录";
+                    break;
                 case 404:
                     error = "找不到资源--404！";
                     break;

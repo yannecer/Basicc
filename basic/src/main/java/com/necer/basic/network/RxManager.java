@@ -23,7 +23,11 @@ public class RxManager {
 
     public static RxManager getInstance() {
         if (rxManager == null) {
-            rxManager = new RxManager();
+            synchronized (RxManager.class) {
+                if (rxManager == null) {
+                    rxManager = new RxManager();
+                }
+            }
         }
         return rxManager;
     }

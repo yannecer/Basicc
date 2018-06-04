@@ -72,14 +72,14 @@ public abstract class NAdapter<T> extends RecyclerView.Adapter<NAdapter.NViewHol
     }
 
     @Override
-    public void onBindViewHolder(final NViewHolder holder, final int position) {
+    public void onBindViewHolder(final NViewHolder holder, int position) {
         if (getItemViewType(position) == ITEM_NORMAL) {
             onBindViewHolder(holder, getData(position - mHeaderSparseArray.size()), position - mHeaderSparseArray.size());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnItemClickListener != null) {
-                        int i = position - mHeaderSparseArray.size();
+                        int i = holder.getAdapterPosition() - mHeaderSparseArray.size();
                         mOnItemClickListener.onItemClick(holder.itemView, mList.get(i), i);
                     }
                 }

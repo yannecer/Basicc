@@ -11,13 +11,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.necer.basic.R;
 import com.necer.basic.network.RxManager;
 import com.necer.basic.view.LoadingDialog;
-
 import org.greenrobot.eventbus.EventBus;
-
 import butterknife.ButterKnife;
 
 
@@ -29,14 +26,10 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
 
 
-    //protected View mLayoutView;//fragment布局view
     public E mModel;
-
     protected Context mContext;
     protected String TAG;//当前页面联网标识
-
     protected boolean isFirstNet = true;//第一次联网
-
     protected LoadingDialog mLoadDialog;
     ViewGroup content;
     View loadingView;
@@ -50,6 +43,7 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
         View layoutView = inflater.inflate(getLayout(), container, false);
 
         //ViewDataBinding viewDataBinding = DataBindingUtil.bind(layoutView);
+
         TAG = getContext().getPackageName() + "." + getClass().getSimpleName();
         mContext = getContext();
         mModel = TUtil.getT(this, 0);
@@ -66,7 +60,7 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
         }
 
         mLoadDialog = new LoadingDialog(mContext);
-        content = (FrameLayout) layoutView.findViewById(R.id.content);
+        content = (ViewGroup) layoutView.findViewById(R.id.content);
         if (content != null) {
             loadingView = LayoutInflater.from(mContext).inflate(R.layout.view_loading, null);
             pb = (ProgressBar) loadingView.findViewById(R.id.pb_);
@@ -90,7 +84,7 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
             }
         }
 
-        setData(savedInstanceState);
+        setData(savedInstanceState, getViewDataBinding(layoutView));
         getNetData();
         return layoutView;
     }
@@ -98,9 +92,11 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
 
     protected abstract void getNetData();
 
+    protected abstract Object getViewDataBinding(View layoutView);
+
     protected abstract int getLayout();
 
-    protected abstract void setData(Bundle savedInstanceState);
+    protected abstract void setData(Bundle savedInstanceState, Object viewDataBinding);
 
     protected boolean onNeedEventbus() {
         return false;

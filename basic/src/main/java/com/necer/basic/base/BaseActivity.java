@@ -13,14 +13,11 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.necer.basic.R;
 import com.necer.basic.network.RxManager;
 import com.necer.basic.view.LoadingDialog;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 
@@ -46,7 +43,11 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayout());
-        setContentView(getLayout());
+        //获取 ViewDataBinding
+        Object viewDataBinding = getViewDataBinding(getLayout());
+        if (viewDataBinding == null) {
+            setContentView(getLayout());
+        }
 
         TAG = getPackageName() + "." + getClass().getSimpleName();
         StatusbarUI.setStatusBarUIMode(this, Color.parseColor("#ffffff"), true);
@@ -65,7 +66,7 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
         }
 
         mLoadDialog = new LoadingDialog(this);
-        content = (FrameLayout) findViewById(R.id.content);
+        content = (ViewGroup) findViewById(R.id.content);
         if (content != null) {
             loadingView = LayoutInflater.from(this).inflate(R.layout.view_loading, null);
             pb = (ProgressBar) loadingView.findViewById(R.id.pb_);
@@ -87,16 +88,18 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
             }
         }
 
-        setData(savedInstanceState);
+        setData(savedInstanceState,viewDataBinding);
         getNetData();
     }
 
 
     protected abstract int getLayout();
 
+    protected abstract Object getViewDataBinding(int layoutId);
+
     protected abstract void getNetData();
 
-    protected abstract void setData(Bundle savedInstanceState);
+    protected abstract void setData(Bundle savedInstanceState, Object viewDataBinding);
 
     @Override
     protected void onDestroy() {
