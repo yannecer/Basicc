@@ -47,7 +47,8 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayout());
+       // ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayout());
+        setContentView(getLayout());
 
         TAG = getPackageName() + "." + getClass().getSimpleName();
         StatusbarUI.setStatusBarUIMode(this, Color.parseColor("#ffffff"), true);
@@ -88,7 +89,7 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
             }
         }
 
-        setData(savedInstanceState, viewDataBinding);
+        setData(savedInstanceState);
         getNetData();
     }
 
@@ -97,7 +98,7 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
 
     protected abstract void getNetData();
 
-    protected abstract void setData(Bundle savedInstanceState, ViewDataBinding viewDataBinding);
+    protected abstract void setData(Bundle savedInstanceState);
 
     @Override
     protected void onDestroy() {

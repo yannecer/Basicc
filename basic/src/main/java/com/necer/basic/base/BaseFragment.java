@@ -51,7 +51,7 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
 
         View layoutView = inflater.inflate(getLayout(), container, false);
 
-        ViewDataBinding viewDataBinding = DataBindingUtil.bind(layoutView);
+        //ViewDataBinding viewDataBinding = DataBindingUtil.bind(layoutView);
         TAG = getContext().getPackageName() + "." + getClass().getSimpleName();
         mContext = getContext();
         mModel = TUtil.getT(this, 0);
@@ -92,7 +92,7 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
             }
         }
 
-        setData(savedInstanceState, viewDataBinding);
+        setData(savedInstanceState);
         getNetData();
         return layoutView;
     }
@@ -102,7 +102,7 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
 
     protected abstract int getLayout();
 
-    protected abstract void setData(Bundle savedInstanceState, ViewDataBinding viewDataBinding);
+    protected abstract void setData(Bundle savedInstanceState);
 
     protected boolean onNeedEventbus() {
         return false;

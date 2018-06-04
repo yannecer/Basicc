@@ -143,8 +143,7 @@ public class FileUtils {
                 fileSizeLong = Double.valueOf(df.format((double) fileS / 1048576));
                 break;
             case SIZETYPE_GB:
-                fileSizeLong = Double.valueOf(df
-                        .format((double) fileS / 1073741824));
+                fileSizeLong = Double.valueOf(df.format((double) fileS / 1073741824));
                 break;
             default:
                 break;
