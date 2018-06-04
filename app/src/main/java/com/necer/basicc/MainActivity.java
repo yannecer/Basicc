@@ -1,15 +1,16 @@
 package com.necer.basicc;
 
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import com.necer.basicc.databinding.ActivityMainBinding;
+import com.necer.basic.base.BaseActivity;
 
-public class MainActivity extends AppCompatActivity {
-    /*@Override
-    protected int getLayout() {
-        return R.layout.activity_main;
+public class MainActivity extends BaseActivity {
 
 
-    }
+    ActivityMainBinding mainBinding;
 
     @Override
     protected void getNetData() {
@@ -17,19 +18,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void setData(Bundle savedInstanceState, ViewDataBinding viewDataBinding) {
-
+    protected int getLayoutId() {
+        return R.layout.activity_main;
     }
-*/
-   /* @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-android.databinding.annotationprocessor.ProcessDataBinding Unable to get public no-arg constructor时抛出异常错误
+    @Override
+    protected void setViewData(Bundle savedInstanceState, int layoutId) {
+        mainBinding = DataBindingUtil.setContentView(this, layoutId);
+    }
 
+  /*  @Override
+    protected void setViewData(Bundle savedInstanceState) {
 
-
+        DataBindingUtil.setContentView(this, R.layout.activity_main);
 
     }*/
 }

@@ -11,10 +11,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.necer.basic.R;
 import com.necer.basic.network.RxManager;
 import com.necer.basic.view.LoadingDialog;
+
 import org.greenrobot.eventbus.EventBus;
+
 import butterknife.ButterKnife;
 
 
@@ -23,7 +26,7 @@ import butterknife.ButterKnife;
  * QQ:619008099
  */
 
-public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
+public abstract class BaseFragment<E extends BaseModel> extends Fragment {
 
 
     public E mModel;
@@ -40,23 +43,20 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View layoutView = inflater.inflate(getLayout(), container, false);
+        View layoutView = inflater.inflate(getLayoutId(), container, false);
 
         //ViewDataBinding viewDataBinding = DataBindingUtil.bind(layoutView);
 
         TAG = getContext().getPackageName() + "." + getClass().getSimpleName();
         mContext = getContext();
         mModel = TUtil.getT(this, 0);
+        if (this instanceof BaseView && mModel != null) mModel.setVM(this);
 
-        if (this instanceof BaseView && mModel != null) {
-            mModel.setVM(this);
-        }
-        ButterKnife.bind(this,layoutView);
+        setViewData(savedInstanceState, layoutView);
+        ButterKnife.bind(this, layoutView);
 
-        if (onNeedEventbus()) {
-            if (!EventBus.getDefault().isRegistered(this)) {
-                EventBus.getDefault().register(this);
-            }
+        if (onNeedEventbus() && !EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
         }
 
         mLoadDialog = new LoadingDialog(mContext);
@@ -75,16 +75,15 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
                     getNetData();
                 }
             });
-            ViewGroup.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+            ViewGroup.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
             if (content instanceof LinearLayout) {
-                content.addView(loadingView, 0,layoutParams);
+                content.addView(loadingView, 0, layoutParams);
             } else {
-                content.addView(loadingView,layoutParams);
+                content.addView(loadingView, layoutParams);
             }
         }
 
-        setData(savedInstanceState, getViewDataBinding(layoutView));
         getNetData();
         return layoutView;
     }
@@ -92,11 +91,15 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment  {
 
     protected abstract void getNetData();
 
-    protected abstract Object getViewDataBinding(View layoutView);
+    protected abstract int getLayoutId();
 
-    protected abstract int getLayout();
-
-    protected abstract void setData(Bundle savedInstanceState, Object viewDataBinding);
+    /**
+     * 初始化页面的方法
+     *
+     * @param savedInstanceState
+     * @param layoutView         fragment的布局view
+     */
+    protected abstract void setViewData(Bundle savedInstanceState, View layoutView);
 
     protected boolean onNeedEventbus() {
         return false;

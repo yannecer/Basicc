@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.necer.basic.R;
 import com.necer.basic.network.RxManager;
 import com.necer.basic.view.LoadingDialog;
+
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
@@ -42,28 +43,21 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayout());
-        //获取 ViewDataBinding
-        Object viewDataBinding = getViewDataBinding(getLayout());
-        if (viewDataBinding == null) {
-            setContentView(getLayout());
-        }
+        // ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayout());
 
         TAG = getPackageName() + "." + getClass().getSimpleName();
-        StatusbarUI.setStatusBarUIMode(this, Color.parseColor("#ffffff"), true);
         mContext = this;
         mModel = TUtil.getT(this, 0);
-        if (this instanceof BaseView && mModel != null) {
-            mModel.setVM(this);
+        if (this instanceof BaseView && mModel != null) mModel.setVM(this);
+
+        if (onNeedEventbus() && !EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
         }
 
+        int layoutId = getLayoutId();
+        setViewData(savedInstanceState,layoutId);
+        StatusbarUI.setStatusBarUIMode(this, Color.parseColor("#ffffff"), true);
         ButterKnife.bind(this);
-
-        if (onNeedEventbus()) {
-            if (!EventBus.getDefault().isRegistered(this)) {
-                EventBus.getDefault().register(this);
-            }
-        }
 
         mLoadDialog = new LoadingDialog(this);
         content = (ViewGroup) findViewById(R.id.content);
@@ -80,26 +74,30 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
                     getNetData();
                 }
             });
-            ViewGroup.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+            ViewGroup.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             if (content instanceof LinearLayout) {
-                content.addView(loadingView, 0,layoutParams);
+                content.addView(loadingView, 0, layoutParams);
             } else {
-                content.addView(loadingView,layoutParams);
+                content.addView(loadingView, layoutParams);
             }
         }
 
-        setData(savedInstanceState,viewDataBinding);
         getNetData();
     }
 
-
-    protected abstract int getLayout();
-
-    protected abstract Object getViewDataBinding(int layoutId);
-
+    /**
+     * 获取网络数据
+     */
     protected abstract void getNetData();
 
-    protected abstract void setData(Bundle savedInstanceState, Object viewDataBinding);
+    protected abstract int getLayoutId();
+
+    /**
+     * 页面初始化方法
+     * @param savedInstanceState
+     * 需要在这个方法中 setContentView 或者  DataBindingUtil.setContentView(this, layoutId);
+     */
+    protected abstract void setViewData(Bundle savedInstanceState,int layoutId);
 
     @Override
     protected void onDestroy() {
@@ -120,17 +118,21 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
 
     public void onStartLoading(int whichRequest) {
         if (content == null) {
-            if(!mLoadDialog.isShowing()){ mLoadDialog.show();}
+            if (!mLoadDialog.isShowing()) {
+                mLoadDialog.show();
+            }
         } else {
-            if(!mLoadDialog.isShowing()&&!isFirstNet) mLoadDialog.show();
+            if (!mLoadDialog.isShowing() && !isFirstNet) mLoadDialog.show();
         }
     }
 
     public void onEndLoading(int whichRequest) {
         if (content == null) {
-            if(mLoadDialog.isShowing()){ mLoadDialog.dismiss();}
+            if (mLoadDialog.isShowing()) {
+                mLoadDialog.dismiss();
+            }
         } else {
-            if(mLoadDialog.isShowing()&&!isFirstNet) mLoadDialog.dismiss();
+            if (mLoadDialog.isShowing() && !isFirstNet) mLoadDialog.dismiss();
         }
     }
 
@@ -140,7 +142,7 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
     }
 
     public void onLoadingSuccess() {
-        if (isFirstNet && content!=null) {
+        if (isFirstNet && content != null) {
             isFirstNet = false;
             loadingView.setVisibility(View.GONE);
         }
@@ -150,7 +152,7 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
         if (isFirstNet && content != null) {
             isFirstNet = false;
             pb.setVisibility(View.GONE);
-            tvError.setText(error+"，点击重试");
+            tvError.setText(error + "，点击重试");
             tvError.setVisibility(View.VISIBLE);
         }
     }

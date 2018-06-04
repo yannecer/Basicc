@@ -62,10 +62,6 @@
                 android:text="确定"
                 android:textColor="#345dd0"
                 android:textSize="16sp" />
-
         </LinearLayout>
-
-
     </LinearLayout>
-
 </LinearLayout>
