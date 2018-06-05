@@ -24,9 +24,9 @@ android {
         }
     }
 
-    dataBinding {
+   /* dataBinding {
         enabled = true
-    }
+    }*/
 }
 
 dependencies {

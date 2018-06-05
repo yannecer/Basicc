@@ -1,16 +1,13 @@
 package com.necer.basicc;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import com.necer.basicc.databinding.ActivityMainBinding;
 import com.necer.basic.base.BaseActivity;
 
 public class MainActivity extends BaseActivity {
 
 
-    ActivityMainBinding mainBinding;
+  //  ActivityMainBinding mainBinding;
 
     @Override
     protected void getNetData() {
@@ -24,13 +21,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void setViewData(Bundle savedInstanceState, int layoutId) {
-        mainBinding = DataBindingUtil.setContentView(this, layoutId);
+
+        //可以使用DataBinding，也可以setContentView(layoutId) 必须要处理
+
+       // mainBinding = DataBindingUtil.setContentView(this, layoutId);
     }
 
-  /*  @Override
-    protected void setViewData(Bundle savedInstanceState) {
 
-        DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-    }*/
 }
