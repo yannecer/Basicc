@@ -35,7 +35,7 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-
+    api 'com.android.support:appcompat-v7:27.1.1'
 
     api 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
     api 'org.greenrobot:eventbus:3.0.0'
@@ -77,8 +77,14 @@ publish {
     userOrg = 'necerr'//bintray.com用户名
     groupId = 'com.necer'//jcenter上的路径
     artifactId = 'basicc'//项目名称
-    publishVersion = '1.0.0'//版本号
+    publishVersion = '1.0.1'//版本号
     desc = '安卓基础库'//描述，不重要
     website = 'https://github.com/yannecer/Basicc'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }
 
+//添加 releaseAndroidJavadocs 报错时需指定encoding UTF-8
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}

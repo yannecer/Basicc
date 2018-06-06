@@ -21,6 +21,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void setViewData(Bundle savedInstanceState, int layoutId) {
+        setContentView(layoutId);
 
         //可以使用DataBinding，也可以setContentView(layoutId) 必须要处理
 

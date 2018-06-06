@@ -24,6 +24,11 @@ public class TestFragment extends BaseFragment {
     protected void setViewData(Bundle savedInstanceState, View layoutView) {
 
 
+
+
+
+
+
         //可以使用DataBinding，也可以不做处理
 
        // testBinding = DataBindingUtil.bind(layoutView);
