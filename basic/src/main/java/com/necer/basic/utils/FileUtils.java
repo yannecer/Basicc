@@ -1,9 +1,11 @@
 package com.necer.basic.utils;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 
 public class FileUtils {
@@ -150,6 +152,35 @@ public class FileUtils {
         }
         return fileSizeLong;
     }
+
+
+    public static File saveBitmap(Bitmap bitmap, String picName,String parentPath) {
+
+        try {
+            File file = new File(parentPath, "/"+picName+".png");
+            File parent = file.getParentFile();
+            if (!parent.exists()) {
+                parent.mkdirs();
+            }
+            FileOutputStream fos = new FileOutputStream(file);
+            boolean b = bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+
+            if (b) {
+                return file;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
 
 
 }

@@ -31,6 +31,10 @@ android {
         }
     }
 
+    dataBinding {
+        enabled = true
+    }
+
 }
 
 dependencies {
@@ -63,7 +67,7 @@ dependencies {
     //底部导航
     api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.0.8@aar'
     //glide
-    api 'com.github.bumptech.glide:glide:4.0.0'
+    api 'com.github.bumptech.glide:glide:3.7.0'
     //分包
     api 'com.android.support:multidex:1.0.0'
     //banner
@@ -77,7 +81,7 @@ publish {
     userOrg = 'necerr'//bintray.com用户名
     groupId = 'com.necer'//jcenter上的路径
     artifactId = 'basicc'//项目名称
-    publishVersion = '1.0.1'//版本号
+    publishVersion = '1.0.10'//版本号
     desc = '安卓基础库'//描述，不重要
     website = 'https://github.com/yannecer/Basicc'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }

@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="loading_dialog" parent="@android:style/Theme.Dialog">
+    <style name="loading_dialog">
         <item name="android:windowIsFloating">true</item>
         <!-- 设置未浮动窗口 -->
         <item name="android:windowFrame">@null</item>

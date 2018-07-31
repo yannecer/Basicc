@@ -19,6 +19,6 @@ public class BannerImageLoader extends ImageLoader {
 
     @Override
     public void displayImage(Context context, Object path, ImageView imageView) {
-        ImageUtil.bind((String) path,imageView);
+        ImageUtil.bind(path.toString(),imageView);
     }
 }

@@ -9,6 +9,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -99,6 +100,13 @@ public abstract class NAdapter<T> extends RecyclerView.Adapter<NAdapter.NViewHol
 
     public abstract void onBindViewHolder(NViewHolder holder, T t, int position);
 
+    public boolean hasHeader() {
+        return mHeaderSparseArray.size() != 0;
+    }
+
+    public boolean hasFooter() {
+        return mFooterSparseArray.size() != 0;
+    }
 
     public void replaceData(List<T> dataList) {
         if (dataList == null) {
@@ -247,6 +255,11 @@ public abstract class NAdapter<T> extends RecyclerView.Adapter<NAdapter.NViewHol
         public void setText(int viewId, String s) {
             TextView textView = getView(viewId);
             textView.setText(s);
+        }
+
+        public void setImage(int viewId, int imageDrawableId) {
+            ImageView imageView = getView(viewId);
+            imageView.setImageResource(imageDrawableId);
         }
     }
 }

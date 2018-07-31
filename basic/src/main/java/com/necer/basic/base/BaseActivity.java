@@ -1,6 +1,8 @@
 package com.necer.basic.base;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -53,9 +55,10 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
             EventBus.getDefault().register(this);
         }
 
-        int layoutId = getLayoutId();
-        setViewData(savedInstanceState,layoutId);
-        StatusbarUI.setStatusBarUIMode(this, Color.parseColor("#ffffff"), true);
+       // int layoutId = getLayoutId();
+        ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayoutId());
+        setViewData(savedInstanceState,viewDataBinding);
+        StatusbarUI.setStatusBarUIMode(this, getActivityTitleColor(), true);
         ButterKnife.bind(this);
 
         mLoadDialog = new LoadingDialog(this);
@@ -96,7 +99,7 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
      * @param savedInstanceState
      * 需要在这个方法中 setContentView 或者  DataBindingUtil.setContentView(this, layoutId);
      */
-    protected abstract void setViewData(Bundle savedInstanceState,int layoutId);
+    protected abstract void setViewData(Bundle savedInstanceState, ViewDataBinding viewDataBinding);
 
     @Override
     protected void onDestroy() {
@@ -156,6 +159,10 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
         }
     }
 
+
+    public int getActivityTitleColor() {
+        return Color.parseColor("#f6f6f6");
+    }
 
   /*  @Subscribe(threadMode = ThreadMode.MAIN)
     public void eventBus(Object o){

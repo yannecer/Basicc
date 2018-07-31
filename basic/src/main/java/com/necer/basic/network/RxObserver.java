@@ -3,6 +3,7 @@ package com.necer.basic.network;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.ParcelUuid;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
@@ -31,10 +32,20 @@ public abstract class RxObserver<T> implements Observer<T> {
     private int mWhichRequest;
     private BaseView mBaseView;
     private Context mContext;
+    private boolean isShowDialog = true;
 
     public RxObserver(BaseView baseView) {
         this(baseView, 0);
+    }
 
+    public RxObserver(BaseView baseView, boolean isShowDialog) {
+        this(baseView, 0);
+        this.isShowDialog = isShowDialog;
+    }
+
+    public RxObserver(BaseView baseView, int whichRequest,boolean isShowDialog) {
+        this(baseView, whichRequest);
+        this.isShowDialog = isShowDialog;
     }
 
     public RxObserver(BaseView baseView, int whichRequest) {
@@ -54,7 +65,7 @@ public abstract class RxObserver<T> implements Observer<T> {
     @Override
     public final void onSubscribe(Disposable d) {
         RxManager.getInstance().add(mBaseView.getTag(), d);
-        mBaseView.onStartLoading(mWhichRequest);
+        if(isShowDialog) mBaseView.onStartLoading(mWhichRequest);
     }
 
     @Override
@@ -64,8 +75,8 @@ public abstract class RxObserver<T> implements Observer<T> {
 
     @Override
     public final void onError(Throwable e) {
+        if(isShowDialog) mBaseView.onEndLoading(mWhichRequest);
 
-        mBaseView.onEndLoading(mWhichRequest);
         String errorMessage = getErrorMessage(e);
         mBaseView.onLoadingError(errorMessage);
         onError(mWhichRequest, e, errorMessage);
@@ -75,7 +86,7 @@ public abstract class RxObserver<T> implements Observer<T> {
     @Override
     public final void onComplete() {
         mBaseView.onLoadingSuccess();
-        mBaseView.onEndLoading(mWhichRequest);
+        if(isShowDialog) mBaseView.onEndLoading(mWhichRequest);
     }
 
     public abstract void onSuccess(int whichRequest, T t);

@@ -37,6 +37,7 @@ public class Navigation extends FrameLayout {
 
     public Navigation title(String title) {
         tv_title.setText(title);
+        tv_title.setVisibility(VISIBLE);
         return this;
     }
 

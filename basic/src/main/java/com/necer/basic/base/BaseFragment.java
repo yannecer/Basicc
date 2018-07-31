@@ -1,6 +1,8 @@
 package com.necer.basic.base;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -45,14 +47,14 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment {
 
         View layoutView = inflater.inflate(getLayoutId(), container, false);
 
-        //ViewDataBinding viewDataBinding = DataBindingUtil.bind(layoutView);
+        ViewDataBinding viewDataBinding = DataBindingUtil.bind(layoutView);
 
         TAG = getContext().getPackageName() + "." + getClass().getSimpleName();
         mContext = getContext();
         mModel = TUtil.getT(this, 0);
         if (this instanceof BaseView && mModel != null) mModel.setVM(this);
 
-        setViewData(savedInstanceState, layoutView);
+        setViewData(savedInstanceState, viewDataBinding);
         ButterKnife.bind(this, layoutView);
 
         if (onNeedEventbus() && !EventBus.getDefault().isRegistered(this)) {
@@ -97,9 +99,8 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment {
      * 初始化页面的方法
      *
      * @param savedInstanceState
-     * @param layoutView         fragment的布局view
      */
-    protected abstract void setViewData(Bundle savedInstanceState, View layoutView);
+    protected abstract void setViewData(Bundle savedInstanceState, ViewDataBinding viewDataBinding);
 
     protected boolean onNeedEventbus() {
         return false;
