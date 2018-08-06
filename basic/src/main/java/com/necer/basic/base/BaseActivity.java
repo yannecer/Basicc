@@ -44,7 +44,7 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayout());
+         ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayoutId());
 
         TAG = getPackageName() + "." + getClass().getSimpleName();
         mContext = this;
@@ -55,9 +55,7 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
             EventBus.getDefault().register(this);
         }
 
-       // int layoutId = getLayoutId();
-        ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayoutId());
-        setViewData(savedInstanceState,viewDataBinding);
+
         StatusbarUI.setStatusBarUIMode(this, getActivityTitleColor(), true);
         ButterKnife.bind(this);
 
@@ -83,7 +81,7 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
                 content.addView(loadingView, layoutParams);
             }
         }
-
+        setViewData(savedInstanceState,viewDataBinding);
         getNetData();
     }
 

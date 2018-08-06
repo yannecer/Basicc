@@ -54,7 +54,7 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment {
         mModel = TUtil.getT(this, 0);
         if (this instanceof BaseView && mModel != null) mModel.setVM(this);
 
-        setViewData(savedInstanceState, viewDataBinding);
+
         ButterKnife.bind(this, layoutView);
 
         if (onNeedEventbus() && !EventBus.getDefault().isRegistered(this)) {
@@ -85,7 +85,7 @@ public abstract class BaseFragment<E extends BaseModel> extends Fragment {
                 content.addView(loadingView, layoutParams);
             }
         }
-
+        setViewData(savedInstanceState, viewDataBinding);
         getNetData();
         return layoutView;
     }
