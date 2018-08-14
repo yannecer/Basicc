@@ -1,5 +1,6 @@
 package com.necer.basicc;
 
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.view.View;
 
@@ -21,16 +22,12 @@ public class TestFragment extends BaseFragment {
     }
 
     @Override
-    protected void setViewData(Bundle savedInstanceState, View layoutView) {
+    protected void setViewData(Bundle savedInstanceState, ViewDataBinding viewDataBinding) {
+
+    }
 
 
-
-
-
-
-
-        //可以使用DataBinding，也可以不做处理
+    //可以使用DataBinding，也可以不做处理
 
        // testBinding = DataBindingUtil.bind(layoutView);
-    }
 }

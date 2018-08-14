@@ -43,7 +43,7 @@ public abstract class RxObserver<T> implements Observer<T> {
         this.isShowDialog = isShowDialog;
     }
 
-    public RxObserver(BaseView baseView, int whichRequest,boolean isShowDialog) {
+    public RxObserver(BaseView baseView, int whichRequest, boolean isShowDialog) {
         this(baseView, whichRequest);
         this.isShowDialog = isShowDialog;
     }
@@ -65,7 +65,7 @@ public abstract class RxObserver<T> implements Observer<T> {
     @Override
     public final void onSubscribe(Disposable d) {
         RxManager.getInstance().add(mBaseView.getTag(), d);
-        if(isShowDialog) mBaseView.onStartLoading(mWhichRequest);
+        if (isShowDialog) mBaseView.onStartLoading(mWhichRequest);
     }
 
     @Override
@@ -75,7 +75,7 @@ public abstract class RxObserver<T> implements Observer<T> {
 
     @Override
     public final void onError(Throwable e) {
-        if(isShowDialog) mBaseView.onEndLoading(mWhichRequest);
+        if (isShowDialog) mBaseView.onEndLoading(mWhichRequest);
 
         String errorMessage = getErrorMessage(e);
         mBaseView.onLoadingError(errorMessage);
@@ -86,7 +86,7 @@ public abstract class RxObserver<T> implements Observer<T> {
     @Override
     public final void onComplete() {
         mBaseView.onLoadingSuccess();
-        if(isShowDialog) mBaseView.onEndLoading(mWhichRequest);
+        if (isShowDialog) mBaseView.onEndLoading(mWhichRequest);
     }
 
     public abstract void onSuccess(int whichRequest, T t);
@@ -110,15 +110,8 @@ public abstract class RxObserver<T> implements Observer<T> {
                     EventBus.getDefault().post(new Event401());
                     error = "请重新登录";
                     break;
-                case 404:
-                    error = "找不到资源--404！";
-                    break;
-                case 500:
-                case 501:
-                case 502:
-                case 503:
-                case 504:
-                    error = "服务器错误！";
+                default:
+                    error = "错误代码：" + httpException.code();
                     break;
             }
         } else if (e instanceof JsonParseException || e instanceof JSONException) {

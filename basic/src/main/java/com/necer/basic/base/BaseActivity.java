@@ -44,14 +44,14 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayoutId());
+        ViewDataBinding viewDataBinding = DataBindingUtil.setContentView(this, getLayoutId());
 
         TAG = getPackageName() + "." + getClass().getSimpleName();
         mContext = this;
         mModel = TUtil.getT(this, 0);
         if (this instanceof BaseView && mModel != null) mModel.setVM(this);
 
-        if (onNeedEventbus() && !EventBus.getDefault().isRegistered(this)){
+        if (onNeedEventbus() && !EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
 
@@ -81,7 +81,7 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
                 content.addView(loadingView, layoutParams);
             }
         }
-        setViewData(savedInstanceState,viewDataBinding);
+        setViewData(savedInstanceState, viewDataBinding);
         getNetData();
     }
 
@@ -94,8 +94,8 @@ public abstract class BaseActivity<E extends BaseModel> extends AppCompatActivit
 
     /**
      * 页面初始化方法
-     * @param savedInstanceState
-     * 需要在这个方法中 setContentView 或者  DataBindingUtil.setContentView(this, layoutId);
+     *
+     * @param savedInstanceState 需要在这个方法中 setContentView 或者  DataBindingUtil.setContentView(this, layoutId);
      */
     protected abstract void setViewData(Bundle savedInstanceState, ViewDataBinding viewDataBinding);
 
