@@ -6,15 +6,14 @@ import android.view.View;
 import com.necer.basic.R;
 import com.necer.basic.base.MyLog;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class DatePicker extends BasePicker {
 
-
-    private ArrayList<String> yearsList;
-    private ArrayList<String> monthsList;
-    private ArrayList<String> daysList;
 
     private int beganYear;
     private int endYear;
@@ -24,11 +23,6 @@ public class DatePicker extends BasePicker {
     private WheelPicker wheelMonth;
     private WheelPicker wheelDay;
 
-    private String selectYear;
-    private String selectMonth;
-    private String selectDay;
-
-    private Calendar calendar;
     private OnDatePickListener mDatePickListener;
 
     public DatePicker(Context context) {
@@ -46,18 +40,11 @@ public class DatePicker extends BasePicker {
         wheelMonth = pickView.findViewById(R.id.wl_month);
         wheelDay = pickView.findViewById(R.id.wl_day);
 
-        calendar = Calendar.getInstance();
-        yearsList = new ArrayList<>();
-        monthsList = new ArrayList<>();
-        daysList = new ArrayList<>();
 
         wheelYear.setCyclic(false);
         wheelMonth.setCyclic(true);
         wheelDay.setCyclic(true);
 
-        wheelYear.setDataList(yearsList);
-        wheelMonth.setDataList(monthsList);
-        wheelDay.setDataList(daysList);
 
         beganYear = 1900;
         endYear = 2050;
@@ -65,9 +52,39 @@ public class DatePicker extends BasePicker {
     }
 
     private void initData() {
-        yearsList.clear();
-        monthsList.clear();
-        daysList.clear();
+
+        setDateTime(new DateTime());
+
+
+        wheelYear.setOnWheelChangeListener(new WheelPicker.OnWheelChangeListener<String>() {
+            @Override
+            public void onWheelSelected(WheelPicker wheelPicker, String item, int position) {
+                calculateDay(wheelYear.getCurrentItem().toString(), wheelMonth.getCurrentItem().toString(), wheelDay.getCurrentItem().toString());
+            }
+        });
+
+        wheelMonth.setOnWheelChangeListener(new WheelPicker.OnWheelChangeListener<String>() {
+            @Override
+            public void onWheelSelected(WheelPicker wheelPicker, String item, int position) {
+                calculateDay(wheelYear.getCurrentItem().toString(), wheelMonth.getCurrentItem().toString(), wheelDay.getCurrentItem().toString());
+
+            }
+        });
+
+        wheelDay.setOnWheelChangeListener(new WheelPicker.OnWheelChangeListener<String>() {
+            @Override
+            public void onWheelSelected(WheelPicker wheelPicker, String item, int position) {
+                //selectDay = item;
+            }
+        });
+    }
+
+    private void setDateTime(DateTime dateTime) {
+
+        List<String> yearsList = new ArrayList<>();
+        List<String> monthsList = new ArrayList<>();
+        List<String> daysList = new ArrayList<>();
+
 
         for (int i = beganYear; i <= endYear; i++) {
             yearsList.add(String.valueOf(i));
@@ -75,62 +92,52 @@ public class DatePicker extends BasePicker {
         for (int i = 1; i <= 12; i++) {
             monthsList.add(i < 10 ? "0" + i : String.valueOf(i));
         }
-        for (int i = 1; i <= 31; i++) {
+        for (int i = 1; i <= dateTime.dayOfMonth().getMaximumValue(); i++) {
             daysList.add(i < 10 ? "0" + i : String.valueOf(i));
         }
 
 
-        selectYear = String.valueOf(calendar.get(Calendar.YEAR));
-        selectMonth = calendar.get(Calendar.MONTH) + 1 < 10 ? "0" + (calendar.get(Calendar.MONTH) + 1) : String.valueOf(calendar.get(Calendar.MONTH) + 1);
-        selectDay = calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + calendar.get(Calendar.DAY_OF_MONTH) : String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+        wheelYear.replaceData(yearsList);
+        wheelMonth.replaceData(monthsList);
+        wheelDay.replaceData(daysList);
 
-        wheelYear.setCurrentPosition(yearsList.indexOf(selectYear));
-        wheelMonth.setCurrentPosition(monthsList.indexOf(selectMonth));
 
-        calculateDate();
-
-        wheelYear.setOnWheelChangeListener(new WheelPicker.OnWheelChangeListener<String>() {
-            @Override
-            public void onWheelSelected(String item, int position) {
-                selectYear = item;
-                calculateDate();
-            }
-        });
-
-        wheelMonth.setOnWheelChangeListener(new WheelPicker.OnWheelChangeListener<String>() {
-            @Override
-            public void onWheelSelected(String item, int position) {
-                selectMonth = item;
-                calculateDate();
-            }
-        });
-
-        wheelDay.setOnWheelChangeListener(new WheelPicker.OnWheelChangeListener<String>() {
-            @Override
-            public void onWheelSelected(String item, int position) {
-                selectDay = item;
-            }
-        });
+        wheelYear.setCurrentPosition(yearsList.indexOf(dateTime.getYear() + ""));
+        wheelMonth.setCurrentPosition(monthsList.indexOf(dateTime.getMonthOfYear() < 10 ? ("0" + dateTime.getMonthOfYear()) : dateTime.getMonthOfYear() + ""));
+        wheelDay.setCurrentPosition(daysList.indexOf(dateTime.getDayOfMonth() < 10 ? ("0" + dateTime.getDayOfMonth()) : dateTime.getDayOfMonth() + ""));
     }
 
+
+    private void calculateDay(String year, String month, String day) {
+
+        //当前显示的年月
+        DateTime dateTime = new DateTime(year + "-" + month + "-01");
+
+        //选中当月的天数
+        int maximumValue = dateTime.dayOfMonth().getMaximumValue();
+
+        List<String> daysList = new ArrayList<>();
+        for (int i = 1; i <= maximumValue; i++) {
+            daysList.add(i < 10 ? "0" + i : String.valueOf(i));
+        }
+
+        wheelDay.replaceData(daysList);
+        int dayIndex = Integer.parseInt(day);
+
+        if (dayIndex >= daysList.size()) {
+            wheelDay.setCurrentPosition(daysList.size() - 1);
+        } else {
+            wheelDay.setCurrentPosition(dayIndex - 1);
+        }
+    }
+
+
     public DatePicker setSelect(String select) {
-        if (select==null || "".equals(select) ) {
+        if (select == null || "".equals(select)) {
             return this;
         }
 
-        String[] split = select.split("-");
-        String year = split[0];
-        String month = split[1];
-        String day = split[2];
-
-
-        int yearIndex = yearsList.indexOf(year);
-        int monthIndex = monthsList.indexOf(month);
-        int dayIndex = daysList.indexOf(day);
-
-        wheelYear.setCurrentPosition(yearIndex == -1 ? 0 : yearIndex);
-        wheelMonth.setCurrentPosition(monthIndex == -1 ? 0 : monthIndex);
-        wheelDay.setCurrentPosition(dayIndex == -1 ? 0 : dayIndex);
+        setDateTime(new DateTime(select));
 
         return this;
     }
@@ -139,10 +146,7 @@ public class DatePicker extends BasePicker {
     @Override
     protected void onSure() {
         if (mDatePickListener != null) {
-            selectYear = yearsList.get(wheelYear.getCurrentPosition());
-            selectMonth = monthsList.get(wheelMonth.getCurrentPosition());
-            selectDay = daysList.get(wheelDay.getCurrentPosition());
-            mDatePickListener.onSelect(selectYear, selectMonth, selectDay);
+            mDatePickListener.onSelect(wheelYear.getCurrentItem().toString(), wheelMonth.getCurrentItem().toString(), wheelDay.getCurrentItem().toString());
         }
     }
 
@@ -153,43 +157,6 @@ public class DatePicker extends BasePicker {
     public DatePicker setOnDatePickListener(OnDatePickListener onDatePickListener) {
         this.mDatePickListener = onDatePickListener;
         return this;
-    }
-
-    private void calculateDate() {
-        daysList.clear();
-        int month = Integer.parseInt(selectMonth);
-        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
-            for (int i = 1; i <= 31; i++) {
-                daysList.add(i < 10 ? "0" + i : String.valueOf(i));
-            }
-        } else if (month == 4 || month == 6 || month == 9 || month == 11) {
-            for (int i = 1; i <= 30; i++) {
-                daysList.add(i < 10 ? "0" + i : String.valueOf(i));
-            }
-            if (selectDay.equals("31")) {
-                selectDay = "30";
-            }
-        } else {
-            // 是否PING年
-            if ((Integer.parseInt(selectYear) % 4 == 0 && (Integer.parseInt(selectYear) % 100 != 0) || (Integer.parseInt(selectYear) % 400 == 0))) {
-                for (int i = 1; i <= 29; i++) {
-                    daysList.add(i < 10 ? "0" + i : String.valueOf(i));
-                }
-                //上月是结尾
-                if (selectDay.equals("30") || selectDay.equals("31")) {
-                    selectDay = "29";
-                }
-
-            } else {
-                for (int i = 1; i <= 28; i++) {
-                    daysList.add(i < 10 ? "0" + i : String.valueOf(i));
-                }
-                if (selectDay.equals("30") || selectDay.equals("31") || selectDay.equals("29")) {
-                    selectDay = "28";
-                }
-            }
-        }
-        wheelDay.setCurrentPosition(daysList.indexOf(selectDay));
     }
 
     public void setYearInterval(int beganYear, int endYear) {

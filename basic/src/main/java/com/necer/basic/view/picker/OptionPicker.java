@@ -6,12 +6,12 @@ import android.view.View;
 import com.necer.basic.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class OptionPicker extends BasePicker {
 
     WheelPicker wheelPicker;
-    List mList;
     OnOptionSelectListener mOptionSelectListener;
 
     public OptionPicker(Context context) {
@@ -19,16 +19,14 @@ public class OptionPicker extends BasePicker {
     }
 
     public OptionPicker setItem(Object[] items) {
-        mList.clear();
-        for (int i = 0; i < items.length; i++) {
-            mList.add(items[i]);
-        }
+
+        List<Object> objects = Arrays.asList(items);
+        wheelPicker.replaceData(objects);
         return this;
     }
 
     public OptionPicker setItem(List list) {
-        mList.clear();
-        mList.addAll(list);
+        wheelPicker.replaceData(list);
         return this;
     }
 
@@ -40,19 +38,15 @@ public class OptionPicker extends BasePicker {
     @Override
     protected void initPickerView(View pickView) {
         wheelPicker = pickView.findViewById(R.id.wheel_picker);
-        mList = new ArrayList<>();
-
         wheelPicker.setCyclic(true);
 
-        wheelPicker.setDataList(mList);
     }
 
     @Override
     protected void onSure() {
-        int currentPosition = wheelPicker.getCurrentPosition();
-        Object o = mList.get(currentPosition);
+
         if (mOptionSelectListener != null) {
-            mOptionSelectListener.onSelect(o,currentPosition);
+            mOptionSelectListener.onSelect(wheelPicker.getCurrentItem(),wheelPicker.getCurrentPosition());
         }
     }
 

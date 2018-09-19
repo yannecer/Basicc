@@ -22,6 +22,7 @@ import com.necer.basic.R;
 import com.necer.basic.base.MyLog;
 
 import java.text.Format;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -238,7 +239,7 @@ public class WheelPicker<T> extends View {
                 if (mCurrentPosition != position) {
                     mCurrentPosition = position;
                     if (mOnWheelChangeListener != null) {
-                        mOnWheelChangeListener.onWheelSelected(mDataList.get(position), position);
+                        mOnWheelChangeListener.onWheelSelected(WheelPicker.this, mDataList.get(position), position);
                     }
                 }
             }
@@ -256,6 +257,8 @@ public class WheelPicker<T> extends View {
     public WheelPicker(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttrs(context, attrs);
+
+        mDataList = new ArrayList<>();
         initPaint();
         mLinearGradient = new LinearGradient(mTextColor, mSelectedItemTextColor);
         mDrawnRect = new Rect();
@@ -406,6 +409,11 @@ public class WheelPicker<T> extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        if (mDataList.size() == 0) {
+            return;
+        }
+
         mPaint.setTextAlign(Paint.Align.CENTER);
         if (mIsShowCurtain) {
             mPaint.setStyle(Paint.Style.FILL);
@@ -594,11 +602,13 @@ public class WheelPicker<T> extends View {
         return mDataList;
     }
 
-    public void setDataList(@NonNull List<T> dataList) {
-        mDataList = dataList;
-        if (dataList.size() == 0) {
+    public void replaceData(@NonNull List<T> dataList) {
+        if (dataList == null || dataList.size() == 0) {
             return;
         }
+
+        mDataList.clear();
+        mDataList.addAll(dataList);
         computeTextSize();
         computeFlingLimitY();
         requestLayout();
@@ -785,7 +795,7 @@ public class WheelPicker<T> extends View {
             mScrollOffsetY = -mItemHeight * mCurrentPosition;
             postInvalidate();
             if (mOnWheelChangeListener != null) {
-                mOnWheelChangeListener.onWheelSelected(mDataList.get(currentPosition), currentPosition);
+                mOnWheelChangeListener.onWheelSelected(this, mDataList.get(currentPosition), currentPosition);
             }
         }
     }
@@ -946,6 +956,12 @@ public class WheelPicker<T> extends View {
         postInvalidate();
     }
 
+
+    public T getCurrentItem() {
+        return mDataList.get(getCurrentPosition());
+    }
+
+
     /**
      * 设置数据集格式
      *
@@ -961,6 +977,6 @@ public class WheelPicker<T> extends View {
     }
 
     public interface OnWheelChangeListener<T> {
-        void onWheelSelected(T item, int position);
+        void onWheelSelected(WheelPicker wheelPicker, T item, int position);
     }
 }

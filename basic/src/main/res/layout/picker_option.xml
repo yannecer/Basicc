@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
-        <com.necer.basic.view.picker1.WheelPicker
+        <com.necer.basic.view.picker.WheelPicker
             android:id="@+id/wheel_picker"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
